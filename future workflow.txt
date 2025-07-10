@@ -1,0 +1,11 @@
+# Step into your project folder
+cd face-emotion-recognition
+
+# Activate conda environment
+conda activate faceemotion
+
+# Run app
+python app.py
+
+Visit: http://127.0.0.1:5000 in your browser to view webcam + emotion detection.
+

@@ -1,0 +1,55 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment folders
+.env/
+.venv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# VS Code settings
+.vscode/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Model checkpoints and weights
+*.h5
+!model/emotion_model.h5
+*.hdf5
+*.keras
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Flask cache
+instance/
+*.pyc
+*.pyo
+*.pyd
+
+# Temporary files
+*.log
+*.tmp
+*.bak
+
+# pip logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Conda environment
+conda-meta/
+*.conda
+
+# Ignore data files (if sensitive or large)
+data/
+datasets/
+
+# Ignore saved screenshots (if temporary)
+screenshot.png

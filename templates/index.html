@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Face Emotion Recognition</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    body {
+      background: linear-gradient(to right, #e3f2fd, #ffffff);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .emotion-badge {
+      font-size: 1.2rem;
+      padding: 0.6rem 1.2rem;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 0.8; }
+      50% { transform: scale(1.05); opacity: 1; }
+      100% { transform: scale(1); opacity: 0.8; }
+    }
+    footer {
+      margin-top: 4rem;
+      padding-top: 1rem;
+      border-top: 1px solid #dee2e6;
+      color: #6c757d;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container text-center">
+    <header class="py-4">
+      <h1 class="text-primary">😃 Real-Time Emotion Recognition</h1>
+      <p class="text-muted">Built with TensorFlow · OpenCV · Flask</p>
+    </header>
+
+    <!-- Webcam Feed -->
+    <div class="video-container">
+      <img src="{{ url_for('video_feed') }}" class="img-fluid rounded shadow border" width="640" height="480" />
+    </div>
+
+    <!-- Emotion Badge -->
+    <div class="emotion-title text-center mt-4">
+      Detected Emotion:
+      <span class="badge bg-info emotion-badge" id="latestEmotion">Analyzing...</span>
+    </div>
+
+    <!-- Chart -->
+    <div class="mt-5">
+      <h5 class="text-center">📊 Emotion History (Last 10)</h5>
+      <canvas id="emotionChart" height="120"></canvas>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center mt-5 mb-3">
+      Made with ❤️ by <strong>Shruti</strong> | Banasthali Vidyapith | Nov 2024 – Jan 2025
+    </footer>
+  </div>
+
+  <!-- Chart Updater Script -->
+  <script>
+    const ctx = document.getElementById('emotionChart').getContext('2d');
+    const emotionChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: [],
+        datasets: [{
+          label: 'Frequency',
+          data: [],
+          backgroundColor: '#0d6efd',
+          borderRadius: 8
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: { beginAtZero: true, ticks: { stepSize: 1 } }
+        }
+      }
+    });
+
+    async function updateChart() {
+      const res = await fetch('/emotion_history');
+      const emotions = await res.json();
+
+      // Update latest emotion text
+      const latest = emotions[emotions.length - 1] || 'Analyzing...';
+      document.getElementById('latestEmotion').textContent = latest;
+
+      // Count frequencies
+      const counts = {};
+      emotions.forEach(emotion => {
+        counts[emotion] = (counts[emotion] || 0) + 1;
+      });
+
+      // Update chart
+      emotionChart.data.labels = Object.keys(counts);
+      emotionChart.data.datasets[0].data = Object.values(counts);
+      emotionChart.update();
+    }
+
+    setInterval(updateChart, 2000);
+  </script>
+</body>
+</html>
